@@ -2,7 +2,7 @@
 
 ## Requerimientos
 
-Aplicación web que permita a los clientes de El Restaurante "Sabor Gourmet" hacer y gestionar reservas en línea.
+Aplicación web que permita a los clientes del Restaurante "Sabor Gourmet" hacer y gestionar reservas en línea.
 
 Esta aplicación debe:
 
@@ -23,10 +23,7 @@ Problemáticas:
 
 ## Tech Stack
 
-Spring Boot
-Maven
-Java 21
-Jar
+Java 21 | Spring Boot 3.5.7 | Maven | Jar
 
 ### Componentes
 
