@@ -14,7 +14,7 @@ Esta aplicación debe:
 
 Problemáticas:
 
-1. Integración de Spring MVC: Implementar controladores para gestionar
+1. Integración de Spring MVC: Implementar controladores y servicios para gestionar
    solicitudes de reserva, visualización y cancelación.
 2. Uso de Spring Data JPA: Modelar y manejar la persistencia de datos
    relacionados con clientes, reservas y mesas.
