@@ -33,7 +33,7 @@ Spring Boot
 - Actuator
 - Spring Data JPA para la gestión de la base de datos.
 - PostgreSQL Driver
-- Thymeleaf para las vistas.
+- Thymeleaf para las vistas con thymeleaf-layout-dialect
 
 ### Otras Dependencias
 
