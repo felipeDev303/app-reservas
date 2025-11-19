@@ -14,8 +14,7 @@ Esta aplicación debe:
 
 Problemáticas:
 
-1. Integración de Spring MVC: Implementar controladores y servicios para gestionar
-   solicitudes de reserva, visualización y cancelación.
+1. Integración de Spring MVC: Implementar controladores y servicios para gestionar solicitudes de reserva, visualización y cancelación.
 2. Uso de Spring Data JPA: Modelar y manejar la persistencia de datos
    relacionados con clientes, reservas y mesas.
 3. Desarrollo de Interfaces con Thymeleaf: Crear vistas dinámicas que permitan
@@ -38,7 +37,17 @@ Java 21 | Spring Boot 3.5.7 | Maven | Jar
 - Spring Web
 - Dev Tools
 
-## Tareas realizadas
+## Tareas Completadas
 
 - [x] Creación del entorno
 - [x] Configuración Inicial
+
+## Tareas Pendientes
+
+- [ ] Configurar la conexión a base de datos PostgreSQL
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+- [ ]
