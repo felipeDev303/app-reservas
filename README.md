@@ -44,10 +44,41 @@ Java 21 | Spring Boot 3.5.7 | Maven | Jar
 
 ## Tareas Pendientes
 
+### 1. Base de datos
+
 - [ ] Configurar la conexión a base de datos PostgreSQL en application.properties
-- [ ] Crear Controladores
-- [ ] Crear Modelos
-- [ ]
-- [ ]
-- [ ]
-- [ ]
+
+### 2. Controladores
+
+- [ ] 1. HomeController (Público)
+- [ ] 2. ReservaController (Cliente)
+- [ ] 3. AdminController (Personal del Restaurante)
+- [ ] 4. MesaController (Administración)
+- [ ] 5. ClienteController (Feature - Administración)
+- [ ] 6. API REST Controller (Feature - Developer)
+
+### 3. Modelos
+
+- [ ] 1. Mesa.java
+- [ ] 2. Cliente.java
+- [ ] 3. Reserva.java
+
+### 4. Repositorios
+
+- [ ] ReservaRepository.java
+
+### 5. Servicios
+
+- [ ] ReservaService.java
+
+### 6. Vista Thymeleaf
+
+- [ ] templates/reservas/formulario.html
+
+### 7. Seguridad
+
+- [ ] Implementar seguridad con Spring Security
+
+### 8. Integración con Fudo API (Feature Futura)
+
+- [ ] Crear un FudoIntegrationService que sincronice el estado de las mesas
