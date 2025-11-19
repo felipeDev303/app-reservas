@@ -44,7 +44,7 @@ Java 21 | Spring Boot 3.5.7 | Maven | Jar
 
 ## Tareas Pendientes
 
-- [ ] Configurar la conexión a base de datos PostgreSQL
+- [ ] Configurar la conexión a base de datos PostgreSQL en application.properties
 - [ ]
 - [ ]
 - [ ]
