@@ -23,9 +23,10 @@ Problemáticas:
 
 ## Tech Stack
 
-### Framework
-
 Spring Boot
+Maven
+Java 21
+Jar
 
 ### Componentes
 
@@ -39,3 +40,8 @@ Spring Boot
 
 - Spring Web
 - Dev Tools
+
+## Tareas realizadas
+
+- [x] Creación del entorno
+- [x] Configuración Inicial
