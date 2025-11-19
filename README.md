@@ -12,7 +12,7 @@ Esta aplicación debe:
 4. Además, el sistema debe proporcionar una interfaz de administración para que el personal del restaurante pueda actualizar la configuración de las mesas y ver las reservas actuales.
 5. La aplicación debe ser responsiva, asegurando una experiencia de usuario óptima tanto en dispositivos móviles como de escritorio.
 
-## Problemáticas
+Problemáticas:
 
 1. Integración de Spring MVC: Implementar controladores para gestionar
    solicitudes de reserva, visualización y cancelación.
