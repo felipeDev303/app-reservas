@@ -14,10 +14,19 @@ Esta aplicación debe:
 
 ## Tech Stack
 
+### Framework
+
 Spring Boot
 
-Componentes esenciales como
+### Componentes
 
 - Spring MVC para la interfaz de usuario.
+- Actuator
 - Spring Data JPA para la gestión de la base de datos.
+- PostgreSQL Driver
 - Thymeleaf para las vistas.
+
+### Otras Dependencias
+
+- Spring Web
+- Dev Tools
