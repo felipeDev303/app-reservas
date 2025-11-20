@@ -46,7 +46,7 @@ Java 21 | Spring Boot 3.5.7 | Maven | Jar
 
 ### 1. Base de datos
 
-- [ ] Configurar la conexión a base de datos PostgreSQL en application.properties
+- [x] Configurar la conexión a base de datos PostgreSQL en application.properties
 
 ### 2. Controladores
 
