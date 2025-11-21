@@ -1,7 +1,10 @@
 package ipss.cl.reservas.models.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ipss.cl.reservas.models.enums.EstadoMesa;
 import ipss.cl.reservas.models.enums.TipoMesa;
 
@@ -10,6 +13,9 @@ import java.util.List;
 @Entity
 @Table(name = "mesas")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Mesa {
     
     @Id

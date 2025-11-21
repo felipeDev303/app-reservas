@@ -1,7 +1,10 @@
 package ipss.cl.reservas.models.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ipss.cl.reservas.models.enums.EstadoReserva;
 
 import java.time.LocalDate;
@@ -11,6 +14,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "reservas")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Reserva {
     
     @Id
