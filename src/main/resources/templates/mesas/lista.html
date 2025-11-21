@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listado de Mesas</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f5f5f5;
+      }
+      .header {
+        background: white;
+        padding: 20px 40px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+      .header h1 {
+        color: #333;
+        font-size: 1.8em;
+      }
+      .btn-home {
+        padding: 10px 20px;
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: all 0.3s;
+      }
+      .btn-home:hover {
+        background: #5568d3;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .filter-bar {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+      .filter-bar select,
+      .filter-bar input {
+        padding: 10px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 1em;
+      }
+      .filter-bar select:focus,
+      .filter-bar input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+      .mesa-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+      .mesa-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-left: 4px solid #667eea;
+      }
+      .mesa-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      }
+      .mesa-card.disponible {
+        border-left-color: #28a745;
+      }
+      .mesa-card.ocupada {
+        border-left-color: #dc3545;
+      }
+      .mesa-card.reservada {
+        border-left-color: #ffc107;
+      }
+      .mesa-card.mantenimiento {
+        border-left-color: #6c757d;
+      }
+
+      .mesa-numero {
+        font-size: 2em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+      }
+      .mesa-tipo {
+        display: inline-block;
+        padding: 5px 12px;
+        background: #667eea;
+        color: white;
+        border-radius: 20px;
+        font-size: 0.85em;
+        margin-bottom: 10px;
+      }
+      .mesa-capacidad {
+        color: #666;
+        margin: 8px 0;
+        font-size: 0.95em;
+      }
+      .mesa-estado {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 5px;
+        font-size: 0.85em;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+      .estado-disponible {
+        background: #d4edda;
+        color: #155724;
+      }
+      .estado-ocupada {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .estado-reservada {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .estado-mantenimiento {
+        background: #e2e3e5;
+        color: #383d41;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-size: 1.2em;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 10px;
+        color: #666;
+      }
+      .empty-state h2 {
+        color: #999;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🪑 Listado de Mesas</h1>
+      <a href="/" class="btn-home">← Volver al Inicio</a>
+    </div>
+
+    <div class="container">
+      <div class="filter-bar">
+        <label>
+          <strong>Filtrar por tipo:</strong>
+          <select id="filtroTipo">
+            <option value="">Todas</option>
+            <option value="INTERIOR">Interior</option>
+            <option value="EXTERIOR">Exterior</option>
+            <option value="TERRAZA">Terraza</option>
+            <option value="VIP">VIP</option>
+            <option value="BARRA">Barra</option>
+          </select>
+        </label>
+        <label>
+          <strong>Filtrar por estado:</strong>
+          <select id="filtroEstado">
+            <option value="">Todos</option>
+            <option value="DISPONIBLE">Disponible</option>
+            <option value="OCUPADA">Ocupada</option>
+            <option value="RESERVADA">Reservada</option>
+            <option value="MANTENIMIENTO">Mantenimiento</option>
+          </select>
+        </label>
+        <label>
+          <input type="checkbox" id="filtroActivas" checked />
+          Solo activas
+        </label>
+      </div>
+
+      <div id="loading" class="loading">Cargando mesas...</div>
+      <div id="mesasContainer" class="mesa-grid" style="display: none"></div>
+      <div id="emptyState" class="empty-state" style="display: none">
+        <h2>No hay mesas para mostrar</h2>
+        <p>Ajusta los filtros para ver más resultados</p>
+      </div>
+    </div>
+
+    <script>
+      let todasLasMesas = [];
+
+      async function cargarMesas() {
+        try {
+          const response = await fetch("/api/mesas");
+          todasLasMesas = await response.json();
+          mostrarMesas(todasLasMesas);
+          document.getElementById("loading").style.display = "none";
+        } catch (error) {
+          console.error("Error cargando mesas:", error);
+          document.getElementById("loading").innerHTML =
+            "❌ Error al cargar las mesas";
+        }
+      }
+
+      function mostrarMesas(mesas) {
+        const container = document.getElementById("mesasContainer");
+        const emptyState = document.getElementById("emptyState");
+
+        if (mesas.length === 0) {
+          container.style.display = "none";
+          emptyState.style.display = "block";
+          return;
+        }
+
+        emptyState.style.display = "none";
+        container.style.display = "grid";
+        container.innerHTML = mesas
+          .map(
+            (mesa) => `
+                <div class="mesa-card ${mesa.estado.toLowerCase()}">
+                    <div class="mesa-numero">Mesa ${mesa.numero}</div>
+                    <span class="mesa-tipo">${formatearTipo(mesa.tipo)}</span>
+                    <div class="mesa-capacidad">
+                        👥 Capacidad: ${mesa.capacidadMinima} - ${
+              mesa.capacidadMaxima
+            } personas
+                    </div>
+                    ${
+                      mesa.descripcion
+                        ? `<div class="mesa-capacidad">📝 ${mesa.descripcion}</div>`
+                        : ""
+                    }
+                    <span class="mesa-estado estado-${mesa.estado.toLowerCase()}">
+                        ${formatearEstado(mesa.estado)}
+                    </span>
+                    ${
+                      !mesa.activa
+                        ? '<div style="color: #dc3545; margin-top: 10px;">⚠️ Inactiva</div>'
+                        : ""
+                    }
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function formatearTipo(tipo) {
+        const tipos = {
+          INTERIOR: "Interior",
+          EXTERIOR: "Exterior",
+          TERRAZA: "Terraza",
+          VIP: "VIP",
+          BARRA: "Barra",
+        };
+        return tipos[tipo] || tipo;
+      }
+
+      function formatearEstado(estado) {
+        const estados = {
+          DISPONIBLE: "✓ Disponible",
+          OCUPADA: "● Ocupada",
+          RESERVADA: "📅 Reservada",
+          MANTENIMIENTO: "🔧 Mantenimiento",
+        };
+        return estados[estado] || estado;
+      }
+
+      function aplicarFiltros() {
+        const filtroTipo = document.getElementById("filtroTipo").value;
+        const filtroEstado = document.getElementById("filtroEstado").value;
+        const soloActivas = document.getElementById("filtroActivas").checked;
+
+        let mesasFiltradas = todasLasMesas.filter((mesa) => {
+          if (filtroTipo && mesa.tipo !== filtroTipo) return false;
+          if (filtroEstado && mesa.estado !== filtroEstado) return false;
+          if (soloActivas && !mesa.activa) return false;
+          return true;
+        });
+
+        mostrarMesas(mesasFiltradas);
+      }
+
+      // Event listeners para filtros
+      document
+        .getElementById("filtroTipo")
+        .addEventListener("change", aplicarFiltros);
+      document
+        .getElementById("filtroEstado")
+        .addEventListener("change", aplicarFiltros);
+      document
+        .getElementById("filtroActivas")
+        .addEventListener("change", aplicarFiltros);
+
+      // Cargar mesas al iniciar
+      cargarMesas();
+    </script>
+  </body>
+</html>

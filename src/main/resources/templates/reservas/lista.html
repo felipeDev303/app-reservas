@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listado de Reservas</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f5f5f5;
+      }
+      .header {
+        background: white;
+        padding: 20px 40px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+      .header h1 {
+        color: #333;
+        font-size: 1.8em;
+      }
+      .btn-home {
+        padding: 10px 20px;
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: all 0.3s;
+      }
+      .btn-home:hover {
+        background: #5568d3;
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .filter-bar {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+      .filter-bar select,
+      .filter-bar input {
+        padding: 10px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 1em;
+      }
+      .filter-bar select:focus,
+      .filter-bar input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+      .table-container {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+      }
+      td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      tbody tr:hover {
+        background: #f8f9fa;
+      }
+      .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+      }
+      .badge-pendiente {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .badge-confirmada {
+        background: #d4edda;
+        color: #155724;
+      }
+      .badge-completada {
+        background: #d1ecf1;
+        color: #0c5460;
+      }
+      .badge-cancelada {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .badge-no-asistio {
+        background: #e2e3e5;
+        color: #383d41;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-size: 1.2em;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 10px;
+        color: #666;
+      }
+      .empty-state h2 {
+        color: #999;
+        margin-bottom: 10px;
+      }
+      .codigo-reserva {
+        font-family: "Courier New", monospace;
+        font-weight: bold;
+        color: #667eea;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        text-align: center;
+      }
+      .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        color: #667eea;
+      }
+      .stat-label {
+        color: #666;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>📅 Listado de Reservas</h1>
+      <a href="/" class="btn-home">← Volver al Inicio</a>
+    </div>
+
+    <div class="container">
+      <div class="stats" id="stats" style="display: none">
+        <div class="stat-card">
+          <div class="stat-number" id="totalReservas">0</div>
+          <div class="stat-label">Total Reservas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="pendientes">0</div>
+          <div class="stat-label">Pendientes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="confirmadas">0</div>
+          <div class="stat-label">Confirmadas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="hoy">0</div>
+          <div class="stat-label">Hoy</div>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <label>
+          <strong>Filtrar por estado:</strong>
+          <select id="filtroEstado">
+            <option value="">Todos</option>
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="CONFIRMADA">Confirmada</option>
+            <option value="COMPLETADA">Completada</option>
+            <option value="CANCELADA">Cancelada</option>
+            <option value="NO_ASISTIO">No asistió</option>
+          </select>
+        </label>
+        <label>
+          <strong>Filtrar por fecha:</strong>
+          <input type="date" id="filtroFecha" />
+        </label>
+        <label>
+          <input type="checkbox" id="soloFuturas" />
+          Solo futuras
+        </label>
+      </div>
+
+      <div id="loading" class="loading">Cargando reservas...</div>
+      <div id="tableContainer" class="table-container" style="display: none">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Cliente</th>
+              <th>Contacto</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Mesa</th>
+              <th>Personas</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="reservasBody"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty-state" style="display: none">
+        <h2>No hay reservas para mostrar</h2>
+        <p>Ajusta los filtros para ver más resultados</p>
+      </div>
+    </div>
+
+    <script>
+      let todasLasReservas = [];
+
+      async function cargarReservas() {
+        try {
+          const response = await fetch("/api/reservas");
+          todasLasReservas = await response.json();
+          mostrarEstadisticas(todasLasReservas);
+          mostrarReservas(todasLasReservas);
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("stats").style.display = "grid";
+        } catch (error) {
+          console.error("Error cargando reservas:", error);
+          document.getElementById("loading").innerHTML =
+            "❌ Error al cargar las reservas";
+        }
+      }
+
+      function mostrarEstadisticas(reservas) {
+        const hoy = new Date().toISOString().split("T")[0];
+
+        document.getElementById("totalReservas").textContent = reservas.length;
+        document.getElementById("pendientes").textContent = reservas.filter(
+          (r) => r.estado === "PENDIENTE"
+        ).length;
+        document.getElementById("confirmadas").textContent = reservas.filter(
+          (r) => r.estado === "CONFIRMADA"
+        ).length;
+        document.getElementById("hoy").textContent = reservas.filter(
+          (r) => r.fecha === hoy
+        ).length;
+      }
+
+      function mostrarReservas(reservas) {
+        const tbody = document.getElementById("reservasBody");
+        const tableContainer = document.getElementById("tableContainer");
+        const emptyState = document.getElementById("emptyState");
+
+        if (reservas.length === 0) {
+          tableContainer.style.display = "none";
+          emptyState.style.display = "block";
+          return;
+        }
+
+        emptyState.style.display = "none";
+        tableContainer.style.display = "block";
+
+        // Ordenar por fecha y hora descendente
+        reservas.sort((a, b) => {
+          const fechaA = new Date(a.fecha + "T" + a.hora);
+          const fechaB = new Date(b.fecha + "T" + b.hora);
+          return fechaB - fechaA;
+        });
+
+        tbody.innerHTML = reservas
+          .map(
+            (reserva) => `
+                <tr>
+                    <td><span class="codigo-reserva">${
+                      reserva.codigoReserva
+                    }</span></td>
+                    <td><strong>${reserva.nombreCliente}</strong></td>
+                    <td>
+                        📧 ${reserva.emailCliente}<br>
+                        📞 ${reserva.telefonoCliente}
+                    </td>
+                    <td>${formatearFecha(reserva.fecha)}</td>
+                    <td><strong>${reserva.hora}</strong></td>
+                    <td>Mesa ${
+                      reserva.mesaNumero || reserva.mesa?.numero || "N/A"
+                    }</td>
+                    <td>👥 ${reserva.numeroPersonas}</td>
+                    <td><span class="badge badge-${reserva.estado
+                      .toLowerCase()
+                      .replace("_", "-")}">${formatearEstado(
+              reserva.estado
+            )}</span></td>
+                </tr>
+            `
+          )
+          .join("");
+      }
+
+      function formatearFecha(fecha) {
+        const date = new Date(fecha + "T00:00:00");
+        return date.toLocaleDateString("es-ES", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      }
+
+      function formatearEstado(estado) {
+        const estados = {
+          PENDIENTE: "Pendiente",
+          CONFIRMADA: "Confirmada",
+          COMPLETADA: "Completada",
+          CANCELADA: "Cancelada",
+          NO_ASISTIO: "No asistió",
+        };
+        return estados[estado] || estado;
+      }
+
+      function aplicarFiltros() {
+        const filtroEstado = document.getElementById("filtroEstado").value;
+        const filtroFecha = document.getElementById("filtroFecha").value;
+        const soloFuturas = document.getElementById("soloFuturas").checked;
+        const hoy = new Date().toISOString().split("T")[0];
+
+        let reservasFiltradas = todasLasReservas.filter((reserva) => {
+          if (filtroEstado && reserva.estado !== filtroEstado) return false;
+          if (filtroFecha && reserva.fecha !== filtroFecha) return false;
+          if (soloFuturas && reserva.fecha < hoy) return false;
+          return true;
+        });
+
+        mostrarReservas(reservasFiltradas);
+      }
+
+      // Event listeners para filtros
+      document
+        .getElementById("filtroEstado")
+        .addEventListener("change", aplicarFiltros);
+      document
+        .getElementById("filtroFecha")
+        .addEventListener("change", aplicarFiltros);
+      document
+        .getElementById("soloFuturas")
+        .addEventListener("change", aplicarFiltros);
+
+      // Cargar reservas al iniciar
+      cargarReservas();
+    </script>
+  </body>
+</html>
