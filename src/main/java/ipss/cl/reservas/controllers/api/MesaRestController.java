@@ -1,4 +1,4 @@
-package ipss.cl.reservas.controllers;
+package ipss.cl.reservas.controllers.api;
 
 public class MesaRestController {
 

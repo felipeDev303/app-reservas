@@ -1,5 +1,9 @@
 package ipss.cl.reservas.models.enums;
 
-public class TipoMesa {
-
+public enum TipoMesa {
+    INTERIOR,
+    EXTERIOR,
+    TERRAZA,
+    VIP,
+    BARRA
 }

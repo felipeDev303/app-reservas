@@ -1,4 +1,4 @@
-package ipss.cl.reservas.models.entities.dto;
+package ipss.cl.reservas.models.dto.response;
 
 public class ClienteResponse {
 
