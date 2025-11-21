@@ -22,7 +22,7 @@ public class ReservaCreateRequest {
     private String telefonoCliente;
     
     // DATOS DE LA RESERVA
-    @NotNull(message = "La mesa es obligatoria")
+    // mesaId es opcional - si es null, se asigna automáticamente
     private Long mesaId;
     
     @NotNull(message = "La fecha es obligatoria")

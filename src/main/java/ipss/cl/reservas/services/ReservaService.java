@@ -241,6 +241,30 @@ public class ReservaService {
     }
     
     /**
+     * Buscar mesa disponible automáticamente
+     */
+    public Optional<Mesa> buscarMesaDisponible(LocalDate fecha, LocalTime hora, Integer numeroPersonas) {
+        log.info("Buscando mesa disponible para {} personas el {} a las {}", numeroPersonas, fecha, hora);
+        
+        // Obtener todas las mesas activas que cumplan con la capacidad
+        List<Mesa> mesasCandidatas = mesaRepository.findByActivaTrue().stream()
+                .filter(mesa -> numeroPersonas >= mesa.getCapacidadMinima() && 
+                                numeroPersonas <= mesa.getCapacidadMaxima())
+                .toList();
+        
+        // Buscar la primera mesa disponible
+        for (Mesa mesa : mesasCandidatas) {
+            if (disponibilidadService.esMesaDisponible(mesa.getId(), fecha, hora)) {
+                log.info("Mesa {} asignada automáticamente", mesa.getNumero());
+                return Optional.of(mesa);
+            }
+        }
+        
+        log.warn("No se encontró mesa disponible");
+        return Optional.empty();
+    }
+    
+    /**
      * Estadísticas
      */
     public Long contarReservasPorEstado(EstadoReserva estado) {

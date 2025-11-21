@@ -152,9 +152,21 @@ public class ReservaRestController {
     @PostMapping
     public ResponseEntity<ReservaResponse> crearReserva(@Valid @RequestBody ReservaCreateRequest request) {
         try {
-            // Obtener la mesa
-            Mesa mesa = mesaService.obtenerMesaPorId(request.getMesaId())
-                    .orElseThrow(() -> new IllegalArgumentException("Mesa no encontrada"));
+            Mesa mesa;
+            
+            // Si no se especifica mesa, buscar una disponible automáticamente
+            if (request.getMesaId() == null) {
+                mesa = reservaService.buscarMesaDisponible(
+                        request.getFecha(), 
+                        request.getHora(), 
+                        request.getNumeroPersonas())
+                    .orElseThrow(() -> new IllegalStateException(
+                            "No hay mesas disponibles para la fecha, hora y número de personas especificados"));
+            } else {
+                // Obtener la mesa especificada
+                mesa = mesaService.obtenerMesaPorId(request.getMesaId())
+                        .orElseThrow(() -> new IllegalArgumentException("Mesa no encontrada"));
+            }
             
             // Crear la reserva
             Reserva reserva = new Reserva();
