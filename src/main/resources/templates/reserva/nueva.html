@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nueva Reserva</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      h1 {
+        color: #333;
+        font-size: 2em;
+        margin-bottom: 10px;
+      }
+      .subtitle {
+        color: #666;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: border-color 0.3s;
+      }
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+      .btn {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 10px;
+      }
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+      }
+      .btn-secondary {
+        background: #f0f0f0;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .alert {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: none;
+      }
+      .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .back-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="/" class="back-link">← Volver al inicio</a>
+
+      <div class="header">
+        <h1>🍽️ Nueva Reserva</h1>
+        <p class="subtitle">Complete el formulario para reservar una mesa</p>
+      </div>
+
+      <div id="alertSuccess" class="alert alert-success"></div>
+      <div id="alertError" class="alert alert-error"></div>
+
+      <form id="reservaForm">
+        <div class="form-group">
+          <label for="nombreCliente">Nombre Completo *</label>
+          <input type="text" id="nombreCliente" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="telefonoCliente">Teléfono *</label>
+            <input type="tel" id="telefonoCliente" required />
+          </div>
+          <div class="form-group">
+            <label for="emailCliente">Email *</label>
+            <input type="email" id="emailCliente" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fecha">Fecha *</label>
+            <input type="date" id="fecha" required />
+          </div>
+          <div class="form-group">
+            <label for="hora">Hora *</label>
+            <input type="time" id="hora" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="numeroPersonas">N° Personas *</label>
+            <input
+              type="number"
+              id="numeroPersonas"
+              min="1"
+              max="20"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="mesaId">Mesa (opcional)</label>
+            <select id="mesaId">
+              <option value="">Asignar automáticamente</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="observaciones">Observaciones</label>
+          <input
+            type="text"
+            id="observaciones"
+            placeholder="Alergias, preferencias, etc."
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
+        <button type="reset" class="btn btn-secondary">
+          Limpiar Formulario
+        </button>
+      </form>
+    </div>
+
+    <script>
+      // Cargar mesas disponibles
+      async function loadMesas() {
+        try {
+          const response = await fetch("/api/mesas/activas");
+          const mesas = await response.json();
+          const select = document.getElementById("mesaId");
+
+          mesas.forEach((mesa) => {
+            const option = document.createElement("option");
+            option.value = mesa.id;
+            option.textContent = `Mesa ${mesa.numero} - ${mesa.tipo} (${mesa.capacidadMinima}-${mesa.capacidadMaxima} personas)`;
+            select.appendChild(option);
+          });
+        } catch (error) {
+          console.error("Error cargando mesas:", error);
+        }
+      }
+
+      // Establecer fecha mínima (hoy)
+      const hoy = new Date().toISOString().split("T")[0];
+      document.getElementById("fecha").min = hoy;
+      document.getElementById("fecha").value = hoy;
+
+      // Manejar envío del formulario
+      document
+        .getElementById("reservaForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const formData = {
+            nombreCliente: document.getElementById("nombreCliente").value,
+            telefonoCliente: document.getElementById("telefonoCliente").value,
+            emailCliente: document.getElementById("emailCliente").value,
+            fecha: document.getElementById("fecha").value,
+            hora: document.getElementById("hora").value,
+            numeroPersonas: parseInt(
+              document.getElementById("numeroPersonas").value
+            ),
+            mesaId: document.getElementById("mesaId").value || null,
+            observaciones:
+              document.getElementById("observaciones").value || null,
+          };
+
+          try {
+            const response = await fetch("/api/reservas", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData),
+            });
+
+            const alertSuccess = document.getElementById("alertSuccess");
+            const alertError = document.getElementById("alertError");
+
+            if (response.ok) {
+              const reserva = await response.json();
+              alertSuccess.textContent = `✓ Reserva creada exitosamente! Código: ${reserva.codigoReserva}`;
+              alertSuccess.style.display = "block";
+              alertError.style.display = "none";
+              document.getElementById("reservaForm").reset();
+              document.getElementById("fecha").value = hoy;
+            } else {
+              const error = await response.json();
+              alertError.textContent = `✗ Error: ${
+                error.message || "No se pudo crear la reserva"
+              }`;
+              alertError.style.display = "block";
+              alertSuccess.style.display = "none";
+            }
+          } catch (error) {
+            const alertError = document.getElementById("alertError");
+            alertError.textContent = `✗ Error de conexión: ${error.message}`;
+            alertError.style.display = "block";
+            document.getElementById("alertSuccess").style.display = "none";
+          }
+        });
+
+      // Cargar mesas al iniciar
+      loadMesas();
+    </script>
+  </body>
+</html>
