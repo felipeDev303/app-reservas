@@ -15,205 +15,161 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css"
     />
-
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding: 20px;
-      }
-      .container {
-        max-width: 600px;
-        margin: 40px auto;
-        background: white;
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      }
-      .header {
-        text-align: center;
-        margin-bottom: 30px;
-      }
-      h1 {
-        color: #333;
-        font-size: 2em;
-        margin-bottom: 10px;
-      }
-      .subtitle {
-        color: #666;
-      }
-      .form-group {
-        margin-bottom: 20px;
-      }
-      label {
-        display: block;
-        color: #333;
-        font-weight: 600;
-        margin-bottom: 8px;
-      }
-      input,
-      select {
-        width: 100%;
-        padding: 12px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 1em;
-        transition: border-color 0.3s;
-      }
-      input:focus,
-      select:focus {
-        outline: none;
-        border-color: #667eea;
-      }
-      .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-      }
-      .btn {
-        width: 100%;
-        padding: 15px;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.1em;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin-top: 10px;
-      }
-      .btn-primary {
-        background: #667eea;
-        color: white;
-      }
-      .btn-primary:hover {
-        background: #5568d3;
-        transform: translateY(-2px);
-      }
-      .btn-secondary {
-        background: #f0f0f0;
-        color: #333;
-      }
-      .btn-secondary:hover {
-        background: #e0e0e0;
-      }
-      .alert {
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        display: none;
-      }
-      .alert-success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-      }
-      .alert-error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-      }
-      .back-link {
-        display: inline-block;
-        margin-bottom: 20px;
-        color: #667eea;
-        text-decoration: none;
-        font-weight: 600;
-      }
-      .back-link:hover {
-        text-decoration: underline;
-      }
-    </style>
   </head>
-  <body>
+  <body class="bg-primary min-vh-100 d-flex align-items-center py-5">
     <div class="container">
-      <a href="/" class="back-link">← Volver al inicio</a>
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4 p-md-5">
+              <a href="/" class="btn btn-link text-decoration-none mb-3">
+                <i class="bi bi-arrow-left me-2"></i>Volver al inicio
+              </a>
 
-      <div class="header">
-        <h1>🍽️ Nueva Reserva</h1>
-        <p class="subtitle">Complete el formulario para reservar una mesa</p>
+              <div class="text-center mb-4">
+                <h1 class="display-5 fw-bold">
+                  <i class="bi bi-calendar-plus text-primary"></i>
+                  Nueva Reserva
+                </h1>
+                <p class="text-muted">
+                  Complete el formulario para reservar una mesa
+                </p>
+              </div>
+
+              <!-- Alerts -->
+              <div
+                id="alertSuccess"
+                class="alert alert-success d-none"
+                role="alert"
+              ></div>
+              <div
+                id="alertError"
+                class="alert alert-danger d-none"
+                role="alert"
+              ></div>
+
+              <!-- Form -->
+              <form id="reservaForm">
+                <div class="row g-3">
+                  <!-- Nombre -->
+                  <div class="col-12">
+                    <label for="nombreCliente" class="form-label fw-semibold">
+                      Nombre Completo <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="nombreCliente"
+                      required
+                    />
+                  </div>
+
+                  <!-- Teléfono y Email -->
+                  <div class="col-md-6">
+                    <label for="telefonoCliente" class="form-label fw-semibold">
+                      Teléfono <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      class="form-control"
+                      id="telefonoCliente"
+                      placeholder="912345678 o +56912345678"
+                      required
+                    />
+                    <div class="form-text">Mínimo 9 dígitos</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="emailCliente" class="form-label fw-semibold">
+                      Email <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="emailCliente"
+                      required
+                    />
+                  </div>
+
+                  <!-- Fecha y Hora -->
+                  <div class="col-md-6">
+                    <label for="fecha" class="form-label fw-semibold">
+                      Fecha <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="fecha"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="hora" class="form-label fw-semibold">
+                      Hora <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="time"
+                      class="form-control"
+                      id="hora"
+                      required
+                    />
+                  </div>
+
+                  <!-- Personas y Mesa -->
+                  <div class="col-md-6">
+                    <label for="numeroPersonas" class="form-label fw-semibold">
+                      Número de Personas <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="numeroPersonas"
+                      min="1"
+                      max="20"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="mesaId" class="form-label fw-semibold">
+                      Mesa <span class="text-muted">(opcional)</span>
+                    </label>
+                    <select class="form-select" id="mesaId">
+                      <option value="">Asignar automáticamente</option>
+                    </select>
+                  </div>
+
+                  <!-- Observaciones -->
+                  <div class="col-12">
+                    <label for="observaciones" class="form-label fw-semibold">
+                      Observaciones
+                    </label>
+                    <textarea
+                      class="form-control"
+                      id="observaciones"
+                      rows="3"
+                      placeholder="Alergias, preferencias, etc."
+                    ></textarea>
+                  </div>
+
+                  <!-- Buttons -->
+                  <div class="col-12">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <button type="reset" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i>Limpiar
+                      </button>
+                      <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-2"></i>Confirmar Reserva
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div id="alertSuccess" class="alert alert-success"></div>
-      <div id="alertError" class="alert alert-error"></div>
-
-      <form id="reservaForm">
-        <div class="form-group">
-          <label for="nombreCliente">Nombre Completo *</label>
-          <input type="text" id="nombreCliente" required />
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="telefonoCliente"
-              >Teléfono *
-              <small style="color: #999">(mín. 9 dígitos)</small></label
-            >
-            <input
-              type="tel"
-              id="telefonoCliente"
-              placeholder="912345678 o +56912345678"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="emailCliente">Email *</label>
-            <input type="email" id="emailCliente" required />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="fecha">Fecha *</label>
-            <input type="date" id="fecha" required />
-          </div>
-          <div class="form-group">
-            <label for="hora">Hora *</label>
-            <input type="time" id="hora" required />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="numeroPersonas">N° Personas *</label>
-            <input
-              type="number"
-              id="numeroPersonas"
-              min="1"
-              max="20"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="mesaId">Mesa (opcional)</label>
-            <select id="mesaId">
-              <option value="">Asignar automáticamente</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="observaciones">Observaciones</label>
-          <input
-            type="text"
-            id="observaciones"
-            placeholder="Alergias, preferencias, etc."
-          />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
-        <button type="reset" class="btn btn-secondary">
-          Limpiar Formulario
-        </button>
-      </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       // Cargar mesas disponibles
       async function loadMesas() {
@@ -272,9 +228,9 @@
 
             if (response.ok) {
               const reserva = await response.json();
-              alertSuccess.textContent = `✓ Reserva creada exitosamente! Código: ${reserva.codigoReserva}`;
-              alertSuccess.style.display = "block";
-              alertError.style.display = "none";
+              alertSuccess.innerHTML = `<i class="bi bi-check-circle me-2"></i>Reserva creada exitosamente! Código: <strong>${reserva.codigoReserva}</strong>`;
+              alertSuccess.classList.remove("d-none");
+              alertError.classList.add("d-none");
               document.getElementById("reservaForm").reset();
               document.getElementById("fecha").value = hoy;
             } else {
@@ -282,7 +238,6 @@
               let mensajeError =
                 error.mensaje || error.error || "No se pudo crear la reserva";
 
-              // Si hay errores de validación específicos, mostrarlos
               if (error.errores) {
                 const camposError = Object.entries(error.errores)
                   .map(([campo, msg]) => `${campo}: ${msg}`)
@@ -290,20 +245,19 @@
                 mensajeError = `${error.error}. ${camposError}`;
               }
 
-              alertError.textContent = `✗ Error: ${mensajeError}`;
-              alertError.style.display = "block";
-              alertSuccess.style.display = "none";
+              alertError.innerHTML = `<i class="bi bi-exclamation-triangle me-2"></i>${mensajeError}`;
+              alertError.classList.remove("d-none");
+              alertSuccess.classList.add("d-none");
               console.error("Error completo:", error);
             }
           } catch (error) {
             const alertError = document.getElementById("alertError");
-            alertError.textContent = `✗ Error de conexión: ${error.message}`;
-            alertError.style.display = "block";
-            document.getElementById("alertSuccess").style.display = "none";
+            alertError.innerHTML = `<i class="bi bi-wifi-off me-2"></i>Error de conexión: ${error.message}`;
+            alertError.classList.remove("d-none");
+            document.getElementById("alertSuccess").classList.add("d-none");
           }
         });
 
-      // Cargar mesas al iniciar
       loadMesas();
     </script>
   </body>
