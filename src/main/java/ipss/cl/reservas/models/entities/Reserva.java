@@ -1,5 +1,6 @@
 package ipss.cl.reservas.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +37,7 @@ public class Reserva {
     // RELACIÓN CON MESA
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mesa_id", nullable = false)
+    @JsonBackReference
     private Mesa mesa;
     
     // DATOS DE LA RESERVA

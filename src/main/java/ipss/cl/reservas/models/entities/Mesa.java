@@ -1,5 +1,6 @@
 package ipss.cl.reservas.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +44,7 @@ public class Mesa {
     private String descripcion;
     
     @OneToMany(mappedBy = "mesa", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Reserva> reservas;
     
     @Column(nullable = false)
