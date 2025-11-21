@@ -151,41 +151,37 @@ public class ReservaRestController {
      */
     @PostMapping
     public ResponseEntity<ReservaResponse> crearReserva(@Valid @RequestBody ReservaCreateRequest request) {
-        try {
-            Mesa mesa;
-            
-            // Si no se especifica mesa, buscar una disponible automáticamente
-            if (request.getMesaId() == null) {
-                mesa = reservaService.buscarMesaDisponible(
-                        request.getFecha(), 
-                        request.getHora(), 
-                        request.getNumeroPersonas())
-                    .orElseThrow(() -> new IllegalStateException(
-                            "No hay mesas disponibles para la fecha, hora y número de personas especificados"));
-            } else {
-                // Obtener la mesa especificada
-                mesa = mesaService.obtenerMesaPorId(request.getMesaId())
-                        .orElseThrow(() -> new IllegalArgumentException("Mesa no encontrada"));
-            }
-            
-            // Crear la reserva
-            Reserva reserva = new Reserva();
-            reserva.setNombreCliente(request.getNombreCliente());
-            reserva.setEmailCliente(request.getEmailCliente());
-            reserva.setTelefonoCliente(request.getTelefonoCliente());
-            reserva.setMesa(mesa);
-            reserva.setFecha(request.getFecha());
-            reserva.setHora(request.getHora());
-            reserva.setNumeroPersonas(request.getNumeroPersonas());
-            reserva.setObservaciones(request.getObservaciones());
-            
-            Reserva nuevaReserva = reservaService.crearReserva(reserva);
-            ReservaResponse response = convertirAResponse(nuevaReserva);
-            
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            return ResponseEntity.badRequest().build();
+        Mesa mesa;
+        
+        // Si no se especifica mesa, buscar una disponible automáticamente
+        if (request.getMesaId() == null) {
+            mesa = reservaService.buscarMesaDisponible(
+                    request.getFecha(), 
+                    request.getHora(), 
+                    request.getNumeroPersonas())
+                .orElseThrow(() -> new IllegalStateException(
+                        "No hay mesas disponibles para la fecha, hora y número de personas especificados"));
+        } else {
+            // Obtener la mesa especificada
+            mesa = mesaService.obtenerMesaPorId(request.getMesaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Mesa no encontrada"));
         }
+        
+        // Crear la reserva
+        Reserva reserva = new Reserva();
+        reserva.setNombreCliente(request.getNombreCliente());
+        reserva.setEmailCliente(request.getEmailCliente());
+        reserva.setTelefonoCliente(request.getTelefonoCliente());
+        reserva.setMesa(mesa);
+        reserva.setFecha(request.getFecha());
+        reserva.setHora(request.getHora());
+        reserva.setNumeroPersonas(request.getNumeroPersonas());
+        reserva.setObservaciones(request.getObservaciones());
+        
+        Reserva nuevaReserva = reservaService.crearReserva(reserva);
+        ReservaResponse response = convertirAResponse(nuevaReserva);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
     /**
