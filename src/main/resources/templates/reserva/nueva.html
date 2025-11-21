@@ -139,8 +139,16 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="telefonoCliente">Teléfono *</label>
-            <input type="tel" id="telefonoCliente" required />
+            <label for="telefonoCliente"
+              >Teléfono *
+              <small style="color: #999">(mín. 9 dígitos)</small></label
+            >
+            <input
+              type="tel"
+              id="telefonoCliente"
+              placeholder="912345678 o +56912345678"
+              required
+            />
           </div>
           <div class="form-group">
             <label for="emailCliente">Email *</label>
@@ -259,11 +267,21 @@
               document.getElementById("fecha").value = hoy;
             } else {
               const error = await response.json();
-              alertError.textContent = `✗ Error: ${
-                error.message || "No se pudo crear la reserva"
-              }`;
+              let mensajeError =
+                error.mensaje || error.error || "No se pudo crear la reserva";
+
+              // Si hay errores de validación específicos, mostrarlos
+              if (error.errores) {
+                const camposError = Object.entries(error.errores)
+                  .map(([campo, msg]) => `${campo}: ${msg}`)
+                  .join(", ");
+                mensajeError = `${error.error}. ${camposError}`;
+              }
+
+              alertError.textContent = `✗ Error: ${mensajeError}`;
               alertError.style.display = "block";
               alertSuccess.style.display = "none";
+              console.error("Error completo:", error);
             }
           } catch (error) {
             const alertError = document.getElementById("alertError");

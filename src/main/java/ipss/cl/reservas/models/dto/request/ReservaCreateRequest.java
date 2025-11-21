@@ -18,7 +18,7 @@ public class ReservaCreateRequest {
     private String emailCliente;
     
     @NotBlank(message = "El teléfono es obligatorio")
-    @Pattern(regexp = "^[0-9]{9,15}$", message = "Teléfono inválido (9-15 dígitos)")
+    @Pattern(regexp = "^[+]?[0-9\\s\\-()]{9,20}$", message = "Teléfono inválido")
     private String telefonoCliente;
     
     // DATOS DE LA RESERVA
